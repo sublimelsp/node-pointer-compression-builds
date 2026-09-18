@@ -42,7 +42,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-linux-x64:
     if: inputs.linux-x64
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Set artifact name
         run: |
@@ -65,7 +65,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -129,7 +129,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-linux-arm64:
     if: inputs.linux-arm64
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-26.04-arm
     steps:
       - name: Set artifact name
         run: |
@@ -152,7 +152,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -216,7 +216,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-macos-x64:
     if: inputs.macos-x64
-    runs-on: macos-15-intel          # last Intel runner
+    runs-on: macos-26-intel          # last Intel runner
     steps:
       - name: Set artifact name
         run: |
@@ -233,7 +233,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -293,7 +293,7 @@ jobs:
   # ─────────────────────────────────────────────
   build-macos-arm64:
     if: inputs.macos-arm64
-    runs-on: macos-15          # M1/M2 runner — ships with Xcode 16 (Clang 16+)
+    runs-on: macos-26          # M1/M2 runner — ships with Xcode 16 (Clang 16+)
     steps:
       - name: Set artifact name
         run: |
@@ -320,7 +320,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -398,7 +398,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -442,7 +442,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
