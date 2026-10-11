@@ -1,17 +1,16 @@
 name: Test Node.js build
 
-# Builds Node.js on all platforms for pull requests that can affect the build.
-# Nothing is uploaded or released.
+# Builds Node.js on all platforms without uploading artifacts or releasing.
+# The build is heavy, so it only runs on request: add the "run-build" label
+# to a pull request (remove and re-add it to test new commits), or start it
+# manually from the Actions tab.
 on:
   pull_request:
-    paths:
-      - 'patches/**'
-      - 'script/**'
-      - '.github/workflows/build.yaml'
-      - '.github/workflows/test-build.yaml'
+    types: [labeled]
+  workflow_dispatch:
 
 concurrency:
-  group: test-build-${{ github.event.pull_request.number }}
+  group: test-build-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -19,6 +18,7 @@ permissions:
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-build'
     uses: ./.github/workflows/build.yaml
     with:
       upload-artifacts: false
