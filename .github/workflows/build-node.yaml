@@ -65,7 +65,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -152,7 +152,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -233,7 +233,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -320,7 +320,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -398,7 +398,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
@@ -442,7 +442,7 @@ jobs:
             https://github.com/nodejs/node.git node-src
 
       - name: Checkout repository (for patches)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
 
