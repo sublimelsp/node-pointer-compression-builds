@@ -4,7 +4,7 @@ Custom builds of Node.js with [V8 pointer compression](https://v8.dev/blog/point
 
 Prebuilt binaries for all platforms are published as GitHub Releases. Each release is triggered manually via the **"Build Node.js from Source"** Actions workflow.
 
-The build steps live in the reusable [`build.yaml`](.github/workflows/build.yaml) workflow. To test a change, add the `run-build` label to its pull request (or start **"Test Node.js build"** manually from the Actions tab). It runs the same build on all platforms without uploading artifacts or publishing a release. To test new commits, remove the label and add it again.
+The build steps live in the reusable [`build.yaml`](.github/workflows/build.yaml) workflow. Pull requests that touch the patches, scripts or build workflows start **"Test Node.js build"**, which runs the same build on all platforms without uploading artifacts or publishing a release. Because a full build takes hours, each run waits for a maintainer to approve it (the `test-build` environment has required reviewers). It can also be started manually from the Actions tab.
 
 ## Build flags
 
