@@ -7,6 +7,13 @@
         "github-actions"
       ],
       "groupName": "GitHub Actions"
+    },
+    {
+      "description": "Runner images are pinned on purpose: older Linux images keep the glibc requirement low, and macOS jobs depend on the Xcode versions installed",
+      "matchDatasources": [
+        "github-runners"
+      ],
+      "enabled": false
     }
   ]
 }
