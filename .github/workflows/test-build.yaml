@@ -1,0 +1,24 @@
+name: Test Node.js build
+
+# Builds Node.js on all platforms for pull requests that can affect the build.
+# Nothing is uploaded or released.
+on:
+  pull_request:
+    paths:
+      - 'patches/**'
+      - 'script/**'
+      - '.github/workflows/build.yaml'
+      - '.github/workflows/test-build.yaml'
+
+concurrency:
+  group: test-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+    with:
+      upload-artifacts: false
