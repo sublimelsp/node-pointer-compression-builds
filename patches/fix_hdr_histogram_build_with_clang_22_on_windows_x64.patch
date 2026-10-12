@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Rafal Chlodnicki <rchl2k@gmail.com>
+Date: Sun, 11 Oct 2026 21:10:40 +0200
+Subject: Fix hdr_histogram build with Clang 22 on Windows x64
+
+ClangCL 22 (Visual Studio 2026) treats -Wincompatible-pointer-types as an
+error. count_leading_zeros_64() passed a uint32_t* to _BitScanReverse64(),
+which takes an unsigned long*.
+
+Matches the fix in HdrHistogram_c 0.12.0, which Node.js picked up in
+https://github.com/nodejs/node/commit/1271bb448a. Drop this patch once
+the Node.js version being built includes histogram 0.12.0.
+
+diff --git a/deps/histogram/src/hdr_histogram.c b/deps/histogram/src/hdr_histogram.c
+index c620045cb174b256e8af6b8260606bc20b19666b..43109112bf870744f96dbdd5947f5e00ffecb694 100644
+--- a/deps/histogram/src/hdr_histogram.c
++++ b/deps/histogram/src/hdr_histogram.c
+@@ -144,7 +144,8 @@ static int64_t power(int64_t base, int64_t exp)
+ static int32_t count_leading_zeros_64(int64_t value)
+ {
+ #if defined(_MSC_VER) && !(defined(__clang__) && (defined(_M_ARM) || defined(_M_ARM64)))
+-    uint32_t leading_zero = 0;
++    /* _BitScanReverse writes an unsigned long */
++    unsigned long leading_zero = 0;
+ #if defined(_WIN64)
+     _BitScanReverse64(&leading_zero, value);
+ #else

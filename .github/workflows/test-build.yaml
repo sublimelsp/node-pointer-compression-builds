@@ -1,0 +1,33 @@
+name: Test Node.js build
+
+# Builds Node.js on all platforms without uploading artifacts or releasing.
+# The build is heavy, so every run waits for a maintainer to approve it
+# (required reviewers on the "test-build" environment).
+on:
+  pull_request:
+    paths:
+      - 'patches/**'
+      - 'script/**'
+      - '.github/workflows/build.yaml'
+      - '.github/workflows/test-build.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: test-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    environment: test-build
+    steps:
+      - run: echo "Build approved"
+
+  build:
+    needs: approve
+    uses: ./.github/workflows/build.yaml
+    with:
+      upload-artifacts: false
