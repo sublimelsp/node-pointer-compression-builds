@@ -1,13 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>sublimelsp/renovate-preset"
+  ],
   "packageRules": [
-    {
-      "description": "Group GitHub Actions updates",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "groupName": "GitHub Actions"
-    },
     {
       "description": "Runner images are pinned on purpose: older Linux images keep the glibc requirement low, and macOS jobs depend on the Xcode versions installed",
       "matchDatasources": [
