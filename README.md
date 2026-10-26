@@ -29,11 +29,13 @@ All builds are configured with:
 
 ## Patches
 
-The builds apply a small set of patches, sourced from the Electron project, on top of the Node.js source tree, stored in [`patches/`](patches/). These are necessary to make the pointer-compression build work:
+The builds apply a small set of patches on top of the Node.js source tree, stored in [`patches/`](patches/). These are necessary to make the pointer-compression build work.
 
-- **`support_v8_sandboxed_pointers`** — refactors several allocators to allocate within the V8 memory cage, required when `V8_SANDBOXED_POINTERS` is active.
+[Electron](https://github.com/electron/electron) builds its bundled Node.js with pointer compression enabled, so the core patches are taken from its [Node.js patch set](https://github.com/electron/electron/tree/main/patches/node), along with the `git-import-patches` and `git-export-patches` scripts used to manage them. Patches not marked as coming from Electron are specific to this repository:
+
+- **`support_v8_sandboxed_pointers`** (from Electron) — refactors several allocators to allocate within the V8 memory cage, required when `V8_SANDBOXED_POINTERS` is active.
 - **`random_build_flag_changes`** — enables the V8 sandbox (`v8_enable_sandbox`) when pointer compression is on, matching V8's expectations.
-- **`api_remove_deprecated_getisolate`** — replaces a deprecated `context->GetIsolate()` call with `Isolate::GetCurrent()`, required by newer V8.
+- **`api_remove_deprecated_getisolate`** (from Electron) — replaces a deprecated `context->GetIsolate()` call with `Isolate::GetCurrent()`, required by newer V8.
 - **`fix_hdr_histogram_build_with_clang_22_on_windows_x64`** — fixes a pointer type mismatch in the bundled HdrHistogram that ClangCL 22 (Visual Studio 2026) rejects on Windows x64. Already fixed in Node.js `main` (histogram 0.12.0); drop it once the built Node.js version includes that update.
 
 ### Adding a new patch
