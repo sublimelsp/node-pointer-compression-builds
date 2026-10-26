@@ -56,4 +56,4 @@ Re-exporting patches may cause shasums in unrelated patches to change. This is h
 ./build.sh
 ```
 
-This clones Node.js at the pinned tag, applies all patches, configures with the pointer-compression flags, and installs the result into `./release/`.
+This clones Node.js at the pinned tag, applies all patches, configures with the same flags as CI, and installs the result into `./release/usr/local/node-<tag>-<platform>-<arch>/` (the same layout as the release tarballs).
