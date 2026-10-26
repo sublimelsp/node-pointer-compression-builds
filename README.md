@@ -55,10 +55,53 @@ Re-exporting patches may cause shasums in unrelated patches to change. This is h
 
 ## Building locally
 
+`build.sh` builds on macOS and Linux; Windows builds only run in CI (through `vcbuild.bat`).
+
+### Prerequisites
+
+- **macOS:** Xcode with Apple clang 16 or newer, plus `ninja` (`brew install ninja`).
+- **Linux:** GCC 12 (`gcc-12` and `g++-12`, which the script picks up when they are installed), `make` and `ninja-build`.
+- On both: `git` and Python 3.
+
+### Build
+
 ```bash
 ./build.sh
 ```
 
-This clones Node.js at the tag pinned in [`node-version.txt`](node-version.txt), applies all patches, configures with the same flags as CI, and installs the result into `./release/usr/local/node-<tag>-<platform>-<arch>/` (the same layout as the release tarballs).
+On macOS, if a Homebrew LLVM `clang` comes first on your `PATH`, point the build at Apple clang to match CI:
 
-On later runs it reuses `node-src-<tag>/` and builds incrementally. If `patches/` has changed since the patches were applied there, it resets the tree to the tag and applies them again. Uncommitted edits are built as they are. It stops without touching anything when the tree has commits that were never exported, or uncommitted edits while the patches need re-applying, and says how to export or discard them.
+```bash
+CC=/usr/bin/clang CXX=/usr/bin/clang++ ./build.sh
+```
+
+The script:
+
+1. Clones Node.js at the tag pinned in [`node-version.txt`](node-version.txt) into `node-src-<tag>/` and applies the patches from `patches/`.
+2. Configures with the same flags as CI (plus `--openssl-use-def-ca-store` on macOS).
+3. Builds with Ninja on all cores. The first build takes a while.
+4. Smoke tests `node` and `npm`, then installs into `./release/usr/local/node-<tag>-<platform>-<arch>/` (the same layout as the release tarballs).
+
+### Trying the result
+
+```bash
+./release/usr/local/node-<tag>-<platform>-<arch>/bin/node --version
+```
+
+To confirm pointer compression is on, this prints `1`:
+
+```bash
+./release/usr/local/node-<tag>-<platform>-<arch>/bin/node -p "process.config.variables.v8_enable_pointer_compression"
+```
+
+Pointer compression also caps the V8 heap at about 4 GB, so this prints at most about `4096` (MB):
+
+```bash
+./release/usr/local/node-<tag>-<platform>-<arch>/bin/node -p "v8.getHeapStatistics().heap_size_limit / 2**20"
+```
+
+### Rebuilding
+
+Later runs reuse `node-src-<tag>/` and build incrementally. If `patches/` has changed since the patches were applied there, the script resets the tree to the tag and applies them again. Uncommitted edits are built as they are. It stops without touching anything when the tree has commits that were never exported, or uncommitted edits while the patches need re-applying, and says how to export or discard them.
+
+To start from scratch, delete `node-src-<tag>/` and `release/`.
