@@ -6,6 +6,7 @@ name: Test Node.js build
 on:
   pull_request:
     paths:
+      - 'node-version.txt'
       - 'patches/**'
       - 'script/**'
       - '.github/workflows/build.yaml'

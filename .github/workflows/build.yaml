@@ -38,7 +38,6 @@ on:
 
 env:
   ARTIFACT_RETENTION_DAYS: 1
-  NODE_TAG: v24.15.0
   GIT_AUTHOR_NAME: github-actions[bot]
   GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
   GIT_COMMITTER_NAME: github-actions[bot]
@@ -48,15 +47,29 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      node-tag: ${{ env.NODE_TAG }}
+      node-tag: ${{ steps.read.outputs.node-tag }}
     steps:
-      - run: echo "Building Node.js $NODE_TAG"
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: node-version.txt
+          sparse-checkout-cone-mode: false
+
+      - name: Read Node.js tag from node-version.txt
+        id: read
+        run: |
+          NODE_TAG=$(tr -d "[:space:]" < node-version.txt)
+          echo "Building Node.js $NODE_TAG"
+          echo "node-tag=$NODE_TAG" >> "$GITHUB_OUTPUT"
 
   # ─────────────────────────────────────────────
   # Linux x64
   # ─────────────────────────────────────────────
   build-linux-x64:
     if: inputs.linux-x64
+    needs: version
+    env:
+      NODE_TAG: ${{ needs.version.outputs.node-tag }}
     runs-on: ubuntu-22.04
     steps:
       - name: Set artifact name
@@ -145,6 +158,9 @@ jobs:
   # ─────────────────────────────────────────────
   build-linux-arm64:
     if: inputs.linux-arm64
+    needs: version
+    env:
+      NODE_TAG: ${{ needs.version.outputs.node-tag }}
     runs-on: ubuntu-22.04-arm
     steps:
       - name: Set artifact name
@@ -233,6 +249,9 @@ jobs:
   # ─────────────────────────────────────────────
   build-macos-x64:
     if: inputs.macos-x64
+    needs: version
+    env:
+      NODE_TAG: ${{ needs.version.outputs.node-tag }}
     runs-on: macos-15-intel          # last Intel runner
     steps:
       - name: Set artifact name
@@ -311,6 +330,9 @@ jobs:
   # ─────────────────────────────────────────────
   build-macos-arm64:
     if: inputs.macos-arm64
+    needs: version
+    env:
+      NODE_TAG: ${{ needs.version.outputs.node-tag }}
     runs-on: macos-15          # M1/M2 runner — ships with Xcode 16 (Clang 16+)
     steps:
       - name: Set artifact name
@@ -406,6 +428,9 @@ jobs:
   # ─────────────────────────────────────────────
   build-windows-x64:
     if: inputs.windows-x64
+    needs: version
+    env:
+      NODE_TAG: ${{ needs.version.outputs.node-tag }}
     runs-on: windows-2025
     steps:
       - name: Install NASM (required by OpenSSL)
@@ -451,6 +476,9 @@ jobs:
   # ─────────────────────────────────────────────
   build-windows-arm64:
     if: inputs.windows-arm64
+    needs: version
+    env:
+      NODE_TAG: ${{ needs.version.outputs.node-tag }}
     runs-on: windows-11-arm
     steps:
       - name: Install NASM (required by OpenSSL)

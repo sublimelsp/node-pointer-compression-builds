@@ -4,7 +4,7 @@ Custom builds of Node.js with [V8 pointer compression](https://v8.dev/blog/point
 
 Prebuilt binaries for all platforms are published as GitHub Releases. Each release is triggered manually via the **"Build Node.js from Source"** Actions workflow.
 
-The build steps live in the reusable [`build.yaml`](.github/workflows/build.yaml) workflow. Pull requests that touch the patches, scripts or build workflows start **"Test Node.js build"**, which runs the same build on all platforms without uploading artifacts or publishing a release. Because a full build takes hours, each run waits for a maintainer to approve it (the `test-build` environment has required reviewers). It can also be started manually from the Actions tab.
+The build steps live in the reusable [`build.yaml`](.github/workflows/build.yaml) workflow. The Node.js version to build is set in [`node-version.txt`](node-version.txt), which both CI and `build.sh` read. Pull requests that touch the version, patches, scripts or build workflows start **"Test Node.js build"**, which runs the same build on all platforms without uploading artifacts or publishing a release. Because a full build takes hours, each run waits for a maintainer to approve it (the `test-build` environment has required reviewers). It can also be started manually from the Actions tab.
 
 ## Build flags
 
@@ -56,4 +56,4 @@ Re-exporting patches may cause shasums in unrelated patches to change. This is h
 ./build.sh
 ```
 
-This clones Node.js at the pinned tag, applies all patches, configures with the same flags as CI, and installs the result into `./release/usr/local/node-<tag>-<platform>-<arch>/` (the same layout as the release tarballs).
+This clones Node.js at the tag pinned in [`node-version.txt`](node-version.txt), applies all patches, configures with the same flags as CI, and installs the result into `./release/usr/local/node-<tag>-<platform>-<arch>/` (the same layout as the release tarballs).
