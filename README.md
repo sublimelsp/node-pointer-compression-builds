@@ -38,8 +38,10 @@ The builds apply a small set of patches, sourced from the Electron project, on t
 
 ### Adding a new patch
 
+Run `./build.sh` once to get a patched source tree in `node-src-<tag>/`, then:
+
 ```bash
-cd node-src
+cd node-src-v24.15.0
 vim some/code/file.cc
 git commit
 ../script/git-export-patches -o ../patches
@@ -57,3 +59,5 @@ Re-exporting patches may cause shasums in unrelated patches to change. This is h
 ```
 
 This clones Node.js at the tag pinned in [`node-version.txt`](node-version.txt), applies all patches, configures with the same flags as CI, and installs the result into `./release/usr/local/node-<tag>-<platform>-<arch>/` (the same layout as the release tarballs).
+
+On later runs it reuses `node-src-<tag>/` and builds incrementally. If `patches/` has changed since the patches were applied there, it resets the tree to the tag and applies them again. Uncommitted edits are built as they are. It stops without touching anything when the tree has commits that were never exported, or uncommitted edits while the patches need re-applying, and says how to export or discard them.
