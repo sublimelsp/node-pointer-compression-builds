@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")"
 ROOT_DIR=$(pwd)
 
-NODE_TAG=v24.15.0
+NODE_TAG=$(tr -d '[:space:]' < node-version.txt)
 NODE_DIR="node-src-$NODE_TAG"
 RELEASE_DIR="$ROOT_DIR/release"
 
