@@ -12,10 +12,10 @@ https://github.com/nodejs/node/commit/1271bb448a. Drop this patch once
 the Node.js version being built includes histogram 0.12.0.
 
 diff --git a/deps/histogram/src/hdr_histogram.c b/deps/histogram/src/hdr_histogram.c
-index c620045cb174b256e8af6b8260606bc20b19666b..43109112bf870744f96dbdd5947f5e00ffecb694 100644
+index a34de2c1b2132ddcbe73220e694b97f78514f7d8..23c711a17142c3ccaf620a6b2246d884b7639954 100644
 --- a/deps/histogram/src/hdr_histogram.c
 +++ b/deps/histogram/src/hdr_histogram.c
-@@ -144,7 +144,8 @@ static int64_t power(int64_t base, int64_t exp)
+@@ -187,7 +187,8 @@ static int64_t power(int64_t base, int64_t exp)
  static int32_t count_leading_zeros_64(int64_t value)
  {
  #if defined(_MSC_VER) && !(defined(__clang__) && (defined(_M_ARM) || defined(_M_ARM64)))
