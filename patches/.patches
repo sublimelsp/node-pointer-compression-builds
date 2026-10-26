@@ -1,3 +1,2 @@
 support_v8_sandboxed_pointers.patch
-api_remove_deprecated_getisolate.patch
 fix_hdr_histogram_build_with_clang_22_on_windows_x64.patch

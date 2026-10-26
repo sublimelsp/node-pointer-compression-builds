@@ -31,10 +31,9 @@ All builds are configured with:
 
 The builds apply a small set of patches on top of the Node.js source tree, stored in [`patches/`](patches/). These are necessary to make the pointer-compression build work.
 
-[Electron](https://github.com/electron/electron) builds its bundled Node.js with pointer compression enabled, so the core patches are taken from its [Node.js patch set](https://github.com/electron/electron/tree/main/patches/node), along with the `git-import-patches` and `git-export-patches` scripts used to manage them. When updating Node.js, take them from an [Electron release](https://github.com/electron/electron/releases) whose `node_version` in [`DEPS`](https://github.com/electron/electron/blob/main/DEPS) matches `node-version.txt`. Patches not marked as coming from Electron are specific to this repository:
+[Electron](https://github.com/electron/electron) builds its bundled Node.js with pointer compression enabled, so the core patch is taken from its [Node.js patch set](https://github.com/electron/electron/tree/main/patches/node), along with the `git-import-patches` and `git-export-patches` scripts used to manage patches. When updating Node.js, take it from an [Electron release](https://github.com/electron/electron/releases) whose `node_version` in [`DEPS`](https://github.com/electron/electron/blob/main/DEPS) matches `node-version.txt`. Most of Electron's other Node.js patches are Electron-specific, or adapt Node.js to the newer V8 that Chromium ships; these builds use the V8 bundled with Node.js, so they don't need them. Patches not marked as coming from Electron are specific to this repository:
 
 - **`support_v8_sandboxed_pointers`** (from Electron) — refactors several allocators to allocate within the V8 memory cage, required when `V8_SANDBOXED_POINTERS` is active.
-- **`api_remove_deprecated_getisolate`** (from Electron) — replaces a deprecated `context->GetIsolate()` call with `Isolate::GetCurrent()`, required by newer V8.
 - **`fix_hdr_histogram_build_with_clang_22_on_windows_x64`** — fixes a pointer type mismatch in the bundled HdrHistogram that ClangCL 22 (Visual Studio 2026) rejects on Windows x64. Already fixed in Node.js `main` (histogram 0.12.0); drop it once the built Node.js version includes that update.
 
 ### Adding a new patch
