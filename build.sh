@@ -31,9 +31,9 @@ CONFIGURE_FLAGS=(
 if [ "$PLATFORM" = darwin ]; then
   # Use the macOS system Keychain for CA certificates
   CONFIGURE_FLAGS+=(--openssl-use-def-ca-store)
-elif [ -z "$CC" ] && command -v gcc-12 >/dev/null && command -v g++-12 >/dev/null; then
-  # CI builds Linux with GCC 12
-  export CC=gcc-12 CXX=g++-12
+elif [ -z "$CC" ] && command -v clang-19 >/dev/null && command -v clang++-19 >/dev/null; then
+  # CI builds Linux with Clang 19
+  export CC=clang-19 CXX=clang++-19
 fi
 
 # Records the commit the patches were last applied (or exported) at, so local

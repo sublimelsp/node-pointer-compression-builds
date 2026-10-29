@@ -80,10 +80,17 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          # Node.js needs a newer compiler than Ubuntu 22.04 ships, so take Clang
+          # from apt.llvm.org. It builds against the system libstdc++, so the
+          # binaries still run on stock Ubuntu 22.04.
+          curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key \
+            | sudo gpg --dearmor -o /usr/share/keyrings/llvm.gpg
+          echo "deb [signed-by=/usr/share/keyrings/llvm.gpg] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main" \
+            | sudo tee /etc/apt/sources.list.d/llvm.list
           sudo apt-get update -q
           sudo apt-get install -y -q \
             python3 make ninja-build git \
-            g++-12 gcc-12 \
+            clang-19 \
             libssl-dev pkg-config \
             xz-utils curl ca-certificates
 
@@ -104,8 +111,8 @@ jobs:
       - name: Configure
         working-directory: node-src
         env:
-          CC: gcc-12
-          CXX: g++-12
+          CC: clang-19
+          CXX: clang++-19
         run: |
           # --prefix: install root inside the staging directory
           # --ninja: use Ninja instead of Make for faster incremental builds
@@ -122,8 +129,8 @@ jobs:
       - name: Build  (this takes 20–40 min)
         working-directory: node-src
         env:
-          CC: gcc-12
-          CXX: g++-12
+          CC: clang-19
+          CXX: clang++-19
         run: make -j4
 
       - name: Smoke test
@@ -171,10 +178,17 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          # Node.js needs a newer compiler than Ubuntu 22.04 ships, so take Clang
+          # from apt.llvm.org. It builds against the system libstdc++, so the
+          # binaries still run on stock Ubuntu 22.04.
+          curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key \
+            | sudo gpg --dearmor -o /usr/share/keyrings/llvm.gpg
+          echo "deb [signed-by=/usr/share/keyrings/llvm.gpg] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main" \
+            | sudo tee /etc/apt/sources.list.d/llvm.list
           sudo apt-get update -q
           sudo apt-get install -y -q \
             python3 make ninja-build git \
-            g++-12 gcc-12 \
+            clang-19 \
             libssl-dev pkg-config \
             xz-utils curl ca-certificates
 
@@ -195,8 +209,8 @@ jobs:
       - name: Configure
         working-directory: node-src
         env:
-          CC: gcc-12
-          CXX: g++-12
+          CC: clang-19
+          CXX: clang++-19
         run: |
           # --prefix: install root inside the staging directory
           # --ninja: use Ninja instead of Make for faster incremental builds
@@ -213,8 +227,8 @@ jobs:
       - name: Build
         working-directory: node-src
         env:
-          CC: gcc-12
-          CXX: g++-12
+          CC: clang-19
+          CXX: clang++-19
         run: make -j4
 
       - name: Smoke test
