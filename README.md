@@ -29,12 +29,9 @@ All builds are configured with:
 
 ## Patches
 
-The builds apply a small set of patches on top of the Node.js source tree, stored in [`patches/`](patches/). These are necessary to make the pointer-compression build work.
+Patches applied on top of the Node.js source tree live in [`patches/`](patches/), in the order listed in [`patches/.patches`](patches/.patches). Each patch's commit message explains why it is needed. The list can be empty: upstream Node.js now supports building with the V8 sandbox ([nodejs/node#62237](https://github.com/nodejs/node/pull/62237)), which pointer compression requires, so a plain release may build without any patches.
 
-[Electron](https://github.com/electron/electron) builds its bundled Node.js with pointer compression enabled, so the core patch is taken from its [Node.js patch set](https://github.com/electron/electron/tree/main/patches/node), along with the `git-import-patches` and `git-export-patches` scripts used to manage patches. When updating Node.js, take it from an [Electron release](https://github.com/electron/electron/releases) whose `node_version` in [`DEPS`](https://github.com/electron/electron/blob/main/DEPS) matches `node-version.txt`. Most of Electron's other Node.js patches are Electron-specific, or adapt Node.js to the newer V8 that Chromium ships; these builds use the V8 bundled with Node.js, so they don't need them. Patches not marked as coming from Electron are specific to this repository:
-
-- **`support_v8_sandboxed_pointers`** (from Electron) — refactors several allocators to allocate within the V8 memory cage, required when `V8_SANDBOXED_POINTERS` is active.
-- **`fix_hdr_histogram_build_with_clang_22_on_windows_x64`** — fixes a pointer type mismatch in the bundled HdrHistogram that ClangCL 22 (Visual Studio 2026) rejects on Windows x64. Already fixed in Node.js `main` (histogram 0.12.0); drop it once the built Node.js version includes that update.
+[Electron](https://github.com/electron/electron) builds its bundled Node.js with pointer compression and the V8 sandbox enabled, so its [Node.js patch set](https://github.com/electron/electron/tree/main/patches/node) is the place to look when a Node.js release needs fixes for this configuration. Take patches from an [Electron release](https://github.com/electron/electron/releases) whose `node_version` in [`DEPS`](https://github.com/electron/electron/blob/main/DEPS) matches `node-version.txt`. Most of Electron's patches are Electron-specific, or adapt Node.js to the newer V8 that Chromium ships; these builds use the V8 bundled with Node.js, so they don't need them. The `git-import-patches` and `git-export-patches` scripts come from Electron too.
 
 ### Adding a new patch
 
@@ -58,8 +55,8 @@ Re-exporting patches may cause shasums in unrelated patches to change. This is h
 
 ### Prerequisites
 
-- **macOS:** Xcode with Apple clang 16 or newer, plus `ninja` (`brew install ninja`).
-- **Linux:** GCC 12 (`gcc-12` and `g++-12`, which the script picks up when they are installed), `make` and `ninja-build`.
+- **macOS:** Xcode 16.4 or newer, plus `ninja` (`brew install ninja`).
+- **Linux:** Clang 19 (`clang-19` from [apt.llvm.org](https://apt.llvm.org/), which the script picks up when it is installed) or another compiler that meets Node.js's [requirements](https://github.com/nodejs/node/blob/main/BUILDING.md#supported-toolchains), plus `make` and `ninja-build`.
 - On both: `git` and Python 3.
 
 ### Build
