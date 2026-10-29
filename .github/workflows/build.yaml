@@ -81,8 +81,9 @@ jobs:
       - name: Install build dependencies
         run: |
           # Node.js needs a newer compiler than Ubuntu 22.04 ships, so take Clang
-          # from apt.llvm.org. It builds against the system libstdc++, so the
-          # binaries still run on stock Ubuntu 22.04.
+          # from apt.llvm.org. It builds against the libstdc++ 12 headers, which
+          # Node.js needs and which match the libstdc++ that Ubuntu 22.04 ships,
+          # so the binaries still run on stock Ubuntu 22.04.
           curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key \
             | sudo gpg --dearmor -o /usr/share/keyrings/llvm.gpg
           echo "deb [signed-by=/usr/share/keyrings/llvm.gpg] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main" \
@@ -90,7 +91,7 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -y -q \
             python3 make ninja-build git \
-            clang-19 \
+            clang-19 libstdc++-12-dev \
             libssl-dev pkg-config \
             xz-utils curl ca-certificates
 
@@ -179,8 +180,9 @@ jobs:
       - name: Install build dependencies
         run: |
           # Node.js needs a newer compiler than Ubuntu 22.04 ships, so take Clang
-          # from apt.llvm.org. It builds against the system libstdc++, so the
-          # binaries still run on stock Ubuntu 22.04.
+          # from apt.llvm.org. It builds against the libstdc++ 12 headers, which
+          # Node.js needs and which match the libstdc++ that Ubuntu 22.04 ships,
+          # so the binaries still run on stock Ubuntu 22.04.
           curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key \
             | sudo gpg --dearmor -o /usr/share/keyrings/llvm.gpg
           echo "deb [signed-by=/usr/share/keyrings/llvm.gpg] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main" \
@@ -188,7 +190,7 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -y -q \
             python3 make ninja-build git \
-            clang-19 \
+            clang-19 libstdc++-12-dev \
             libssl-dev pkg-config \
             xz-utils curl ca-certificates
 
